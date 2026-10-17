@@ -1,0 +1,48 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+env:
+  CARGO_TERM_COLOR: always
+  RUSTFLAGS: -D warnings
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          components: rustfmt, clippy
+      - uses: Swatinem/rust-cache@v2
+      - name: Format
+        run: cargo fmt --check
+      - name: Clippy
+        run: cargo clippy --all-targets -- -D warnings
+      - name: Test
+        run: cargo test
+
+  portable:
+    name: Portable static build (musl)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: x86_64-unknown-linux-musl
+      - uses: Swatinem/rust-cache@v2
+      - name: Build static binary
+        run: cargo build --release --target x86_64-unknown-linux-musl
+      - name: Verify it is static
+        run: |
+          bin=target/x86_64-unknown-linux-musl/release/linux-packager
+          file "$bin"
+          if readelf -l "$bin" | grep -q interpreter; then
+            echo "error: binary is dynamically linked" >&2
+            exit 1
+          fi
+      - name: Smoke test
+        run: ./target/x86_64-unknown-linux-musl/release/linux-packager --version

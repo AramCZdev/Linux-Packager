@@ -1,0 +1,40 @@
+name: Release
+
+on:
+  push:
+    tags: ["v*"]
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  portable-linux:
+    name: Portable Linux binary (static musl)
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: x86_64-unknown-linux-musl
+      - uses: Swatinem/rust-cache@v2
+      - name: Build static binary
+        run: cargo build --release --target x86_64-unknown-linux-musl
+      - name: Package
+        run: |
+          stage="linux-packager-${GITHUB_REF_NAME}-x86_64-unknown-linux-musl"
+          mkdir -p dist "$stage"
+          cp target/x86_64-unknown-linux-musl/release/linux-packager "$stage/"
+          cp README.md LICENSE "$stage/"
+          tar -czf "dist/$stage.tar.gz" "$stage"
+          (cd dist && sha256sum "$stage.tar.gz" > "$stage.tar.gz.sha256")
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: linux-packager-static
+          path: dist/*
+      - name: Attach to GitHub release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: dist/*
