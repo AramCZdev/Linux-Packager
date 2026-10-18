@@ -15,13 +15,6 @@ static — no dependencies, no install step:
 
 ```sh
 chmod +x linux-packager
-sudo mv linux-packager /usr/local/bin/
-```
-
-## Install from source
-
-```sh
-cargo install --path .
 ```
 
 ## Usage
@@ -29,7 +22,7 @@ cargo install --path .
 Create a starter manifest:
 
 ```sh
-linux-packager init
+./linux-packager init
 ```
 
 That writes a `LinuxPackager.toml`:
@@ -69,13 +62,13 @@ group = "Applications/System"
 Build every supported format into `dist/`:
 
 ```sh
-linux-packager build
+./linux-packager build
 ```
 
 Choose formats, output directory, or a manifest explicitly:
 
 ```sh
-linux-packager build --manifest path/to/LinuxPackager.toml \
+./linux-packager build --manifest path/to/LinuxPackager.toml \
                      --format deb --format rpm \
                      --output dist
 ```
@@ -238,12 +231,3 @@ Where each manifest value ends up in the built packages:
 
 `.rpm` output requires `rpmbuild` on `PATH` (install `rpm` / `rpm-build`).
 Building `.deb` has no external dependencies.
-
-## Development
-
-```sh
-cargo build
-cargo test
-cargo clippy --all-targets -- -D warnings
-cargo fmt --check
-```
