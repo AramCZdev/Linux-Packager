@@ -118,11 +118,11 @@ The executable to ship.
 | Key | Required | Default | Description |
 | --- | --- | --- | --- |
 | `path` | yes | — | Path to the executable, relative to the manifest. It must already exist — build it first. |
-| `install_dir` | no | `/usr/bin` | Where the executable is installed. The filename is kept from `path`, so `bin/ghostab` → `/usr/bin/ghostab`. |
+| `install_dir` | no | `/usr/bin` | Where the executable is installed. The filename is kept from `path`, so `bin/examplename` → `/usr/bin/examplename`. |
 
 ```toml
 [binary]
-path = "target/release/ghostab"
+path = "target/release/examplename"
 # install_dir = "/usr/local/bin"   # avoids clashing with an existing package
 ```
 
@@ -134,18 +134,18 @@ file.
 | Key | Required | Default | Description |
 | --- | --- | --- | --- |
 | `source` | yes | — | File to ship, relative to the manifest. |
-| `dest` | yes | — | Absolute path inside the package, e.g. `/etc/ghostab/config.toml`. Must start with `/` and may not contain `..`. |
+| `dest` | yes | — | Absolute path inside the package, e.g. `/etc/examplename/config.toml`. Must start with `/` and may not contain `..`. |
 | `mode` | no | source's mode | Unix permissions in octal, e.g. `0o644`. |
 
 ```toml
 [[files]]
 source = "assets/config.toml"
-dest = "/etc/ghostab/config.toml"
+dest = "/etc/examplename/config.toml"
 mode = 0o644
 
 [[files]]
 source = "assets/icon.png"
-dest = "/usr/share/pixmaps/ghostab.png"
+dest = "/usr/share/pixmaps/examplename.png"
 ```
 
 ### `[deb]` — Debian options
@@ -223,7 +223,7 @@ Where each manifest value ends up in the built packages:
   manifest's directory. Override the base with `--root`.
 - `files[].dest` must be absolute (`/etc/...`), not `./etc/...`.
 - Package **name** collisions matter at install time: if a file (e.g.
-  `/usr/bin/ghostab`) is already owned by another installed package, `dpkg -i`
+  `/usr/bin/examplename`) is already owned by another installed package, `dpkg -i`
   refuses to overwrite it. Use a distinct `install_dir`, or match the existing
   package's `name` + a higher `version` to upgrade cleanly.
 
