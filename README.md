@@ -101,11 +101,11 @@ Identity and metadata of the package.
 
 ```toml
 [package]
-name = "ghostab"
-version = "3.0.2"
-description = "A ghost-themed tab manager"
+name = "examplename"
+version = "1.1.0"
+description = "Cool description"
 license = "MIT"
-maintainer = "Aram <aram@example.com>"
+maintainer = "Person <person@example.com>"
 homepage = "https://example.com"
 # arch = "amd64"     # defaults to the host you build on
 # release = "1"
