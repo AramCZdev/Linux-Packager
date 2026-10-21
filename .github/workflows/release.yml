@@ -23,7 +23,7 @@ jobs:
         run: cargo build --release --target x86_64-unknown-linux-musl
       - name: Package
         run: |
-          stage="linux-packager-${GITHUB_REF_NAME}-x86_64-unknown-linux-musl"
+          stage="linux-packager-${GITHUB_REF_NAME}-amd64"
           mkdir -p dist "$stage"
           cp target/x86_64-unknown-linux-musl/release/linux-packager "$stage/"
           cp README.md LICENSE "$stage/"
